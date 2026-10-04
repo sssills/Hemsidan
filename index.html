@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EXEMPELPIZZERIA — Hantverkspizza & Vedugn</title>
+  <meta name="description" content="En modern exempelpizzeria med levande surdeg, 450° vedugn och äkta råvaror." />
+  
+  <!-- Google Fonts: Bricolage Grotesque & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================
+       DESIGN SYSTEM & FÄRGPALETT (Ljus, glad & Apple Glass)
+       ========================================================== */
+    :root {
+      --bg-cream: #FCFAF6;
+      --bg-surface: rgba(255, 255, 255, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.65);
+      --glass-border-subtle: rgba(226, 232, 240, 0.7);
+      --glass-shadow: 0 20px 45px -15px rgba(225, 29, 72, 0.08), 0 0 1px 1px rgba(255, 255, 255, 0.9) inset;
+      
+      --tomato: #E11D48;
+      --tomato-hover: #BE123C;
+      --tomato-light: #FFE4E6;
+      --sun: #FBBF24;
+      --sun-soft: #FEF3C7;
+      --mint: #10B981;
+      --mint-soft: #D1FAE5;
+      
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --font-display: 'Bricolage Grotesque', sans-serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius-pill: 9999px;
+      --radius-card: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.5;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(251, 191, 36, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 90% 60%, rgba(209, 250, 229, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(255, 228, 230, 0.4) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ==========================================================
+       INTRO ANIMATION (< 5 SEKUNDER)
+       ========================================================== */
+    #intro-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(circle at center, #FEF08A 0%, #F59E0B 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+      perspective: 1200px;
+    }
+
+    #intro-screen.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .skip-intro-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      color: #78350F;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 20px;
+      border-radius: var(--radius-pill);
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .skip-intro-btn:hover {
+      background: rgba(255, 255, 255, 0.6);
+      transform: scale(1.05);
+    }
+
+    .box-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+    }
+
+    /* Pizzalåda */
+    .pizza-box-bottom {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      background: #FFFBEB;
+      border: 8px solid #FDE68A;
+      border-radius: 20px;
+      box-shadow: 0 30px 60px rgba(180, 83, 9, 0.35);
+    }
+
+    .pizza-box-lid {
+      position: absolute;
+      top: 20px;
+      width: 280px;
+      height: 280px;
+      background: #FEF3C7;
+      border: 8px solid #FCD34D;
+      border-radius: 20px;
+      transform-origin: center top;
+      animation: openLid 4.2s cubic-bezier(0.65, 0, 0.2, 1) forwards;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+      z-index: 3;
+    }
+
+    .lid-logo {
+      border: 3px dashed var(--tomato);
+      border-radius: 14px;
+      padding: 18px 24px;
+      text-align: center;
+      color: var(--tomato);
+      font-family: var(--font-display);
+      font-size: 24px;
+      line-height: 1.1;
+      font-weight: 900;
+    }
+
+    /* Den animerade pizzan */
+    .intro-pizza-svg {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      z-index: 2;
+      filter: drop-shadow(0 15px 25px rgba(120, 53, 15, 0.4));
+      animation: popAndSpinPizza 4.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes openLid {
+      0%, 15% { transform: rotateX(0deg); }
+      40%, 100% { transform: rotateX(-115deg); }
+    }
+
+    @keyframes popAndSpinPizza {
+      0%, 25% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.6) rotate(-20deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-20px) scale(1) rotate(15deg);
+      }
+      75% {
+        opacity: 1;
+        transform: translateY(-25px) scale(1.08) rotate(350deg);
+      }
+      92% {
+        opacity: 1;
+        transform: translateY(0px) scale(3.8) rotate(375deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(0px) scale(4.8) rotate(390deg);
+      }
+    }
+
+    .intro-status {
+      margin-top: 40px;
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      color: #92400E;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    /* ==========================================================
+       HEADER & APPLE-GLASNAVIGERING
+       ========================================================== */
+    header {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      padding: 0 16px;
+    }
+
+    .glass-nav {
+      background: var(--bg-surface);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 12px 35px -8px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+      border-radius: var(--radius-pill);
+      padding: 10px 18px 10px 24px;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      max-width: 900px;
+      width: 100%;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 20px;
+      color: var(--tomato);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-icon {
+      font-size: 24px;
+      animation: gentleFloat 4s ease-in-out infinite;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--tomato);
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cart-pill {
+      background: #FFF;
+      border: 1px solid var(--glass-border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      color: var(--text-main);
+    }
+
+    .cart-badge {
+      background: var(--tomato);
+      color: white;
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 11px;
+    }
+
+    /* ==========================================================
+       HERO SEKTION
+       ========================================================== */
+    .hero {
+      padding-top: 170px;
+      padding-bottom: 90px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: center;
+      gap: 50px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: var(--sun-soft);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      border-radius: var(--radius-pill);
+      color: #92400E;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.12);
+    }
+
+    .hero-title {
+      font-size: clamp(44px, 6.5vw, 84px);
+      line-height: 0.94;
+      margin-bottom: 24px;
+    }
+
+    .hero-title span.accent {
+      color: var(--tomato);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-subtitle {
+      font-size: 19px;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--tomato);
+      color: #FFF;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 32px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 12px 28px -6px rgba(225, 29, 72, 0.38);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary:hover {
+      background: var(--tomato-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px -6px rgba(225, 29, 72, 0.48);
+    }
+
+    .btn-glass {
+      background: var(--bg-surface);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 28px;
+      border-radius: var(--radius-pill);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      transition: all 0.25s;
+    }
+
+    .btn-glass:hover {
+      background: #FFF;
+      transform: translateY(-2px);
+    }
+
+    /* Hero Bild med Glas-effekter */
+    .hero-media {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pizza-orbit {
+      width: 100%;
+      max-width: 440px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FEF08A 0%, rgba(254, 240, 138, 0.1) 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero-pizza-img {
+      width: 90%;
+      animation: gentleFloat 6s ease-in-out infinite;
+      filter: drop-shadow(0 25px 35px rgba(225, 29, 72, 0.25));
+    }
+
+    .float-card {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 14px 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: gentleFloat 5s ease-in-out infinite alternate;
+    }
+
+    .float-card.top-left {
+      top: 10px;
+      left: -10px;
+    }
+
+    .float-card.bottom-right {
+      bottom: 20px;
+      right: -10px;
+      animation-delay: -2.5s;
+    }
+
+    .float-icon {
+      font-size: 26px;
+    }
+
+    .float-text strong {
+      display: block;
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    .float-text span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    /* ==========================================================
+       HIGHLIGHTS & STATS (GLAS KORT)
+       ========================================================== */
+    .features-section {
+      padding: 60px 0;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      box-shadow: var(--glass-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px -10px rgba(0,0,0,0.1);
+    }
+
+    .feature-emoji {
+      font-size: 38px;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .feature-card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================
+       MENY SEKTION (INTERAKTIV)
+       ========================================================== */
+    .menu-section {
+      padding: 90px 0;
+    }
+
+    .section-head {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 50px auto;
+    }
+
+    .section-tag {
+      color: var(--tomato);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 4.5vw, 54px);
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    /* Kategori-tabs */
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 10px 22px;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--text-main);
+      color: #FFF;
+      border-color: var(--text-main);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .menu-card {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-card);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 16px 36px -10px rgba(0,0,0,0.05);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 24px 50px -10px rgba(225, 29, 72, 0.12);
+    }
+
+    .menu-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--sun);
+      color: #78350F;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+    }
+
+    .pizza-number {
+      font-family: var(--font-display);
+      font-size: 14px;
+      color: var(--tomato);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .pizza-name {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .pizza-ingredients {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .menu-card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 18px;
+      border-top: 1px dashed rgba(203, 213, 225, 0.6);
+    }
+
+    .pizza-price {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .add-to-cart-btn {
+      background: var(--bg-cream);
+      color: var(--text-main);
+      border: 1px solid var(--glass-border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 10px 18px;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .add-to-cart-btn:hover {
+      background: var(--tomato);
+      color: white;
+      border-color: var(--tomato);
+      transform: scale(1.04);
+    }
+
+    /* ==========================================================
+       KONTAKTSIDA / SEKTION & SOCIALA MEDIER
+       ========================================================== */
+    .contact-section {
+      padding: 90px 0 120px 0;
+      position: relative;
+    }
+
+    .contact-container {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(30px) saturate(190%);
+      -webkit-backdrop-filter: blur(30px) saturate(190%);
+      border: 1px solid var(--glass-border);
+      border-radius: 36px;
+      padding: 50px;
+      box-shadow: 0 30px 60px -20px rgba(15, 23, 42, 0.08);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      margin-top: 36px;
+    }
+
+    .contact-info-block {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--glass-border-subtle);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .contact-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--tomato-light);
+      color: var(--tomato);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .contact-info-block h4 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .contact-info-block p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Sociala medier knappar med länkar */
+    .socials-card {
+      background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%);
+      border-radius: 28px;
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(253, 224, 71, 0.6);
+      box-shadow: 0 20px 40px -10px rgba(234, 179, 8, 0.25);
+    }
+
+    .socials-card h3 {
+      font-size: 26px;
+      color: #78350F;
+      margin-bottom: 8px;
+    }
+
+    .socials-card p {
+      color: #92400E;
+      font-size: 15px;
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+
+    .social-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .social-link-btn {
+      background: #FFF;
+      color: var(--text-main);
+      padding: 16px 24px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .social-link-btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.1);
+    }
+
+    .social-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .social-logo-svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ==========================================================
+       FOOTER
+       ========================================================== */
+    footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--glass-border-subtle);
+      padding: 50px 0 30px 0;
+      text-align: center;
+    }
+
+    .footer-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 20px;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(16px);
+      color: #FFF;
+      padding: 14px 28px;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      z-index: 10000;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================
+       RESPONSIVITET
+       ========================================================== */
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .hero-subtitle {
+        margin: 0 auto 36px auto;
+      }
+      .btn-group {
+        justify-content: center;
+      }
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================
+       INTRO SCREEN (< 5 SEKUNDER)
+       ========================================================== -->
+  <div id="intro-screen">
+    <button class="skip-intro-btn" onclick="skipIntro()">Hoppa över ✕</button>
+
+    <div class="box-container">
+      <div class="pizza-box-bottom"></div>
+      
+      <!-- Pizzalådans lock som fälls upp -->
+      <div class="pizza-box-lid">
+        <div class="lid-logo">
+          EXEMPEL<br/>PIZZERIA
+        </div>
+      </div>
+
+      <!-- Den animerade pizzan -->
+      <svg class="intro-pizza-svg" viewBox="0 0 200 200">
+        <!-- Pizzabotten -->
+        <circle cx="100" cy="100" r="90" fill="#E59866" stroke="#BA4A00" stroke-width="6"/>
+        <!-- Tomatsås & ost -->
+        <circle cx="100" cy="100" r="76" fill="#F4D03F" stroke="#E74C3C" stroke-width="4"/>
+        <!-- Pepperoni / Salami -->
+        <circle cx="65" cy="70" r="14" fill="#C0392B"/>
+        <circle cx="130" cy="65" r="13" fill="#C0392B"/>
+        <circle cx="95" cy="120" r="15" fill="#C0392B"/>
+        <circle cx="140" cy="125" r="12" fill="#C0392B"/>
+        <circle cx="60" cy="130" r="13" fill="#C0392B"/>
+        <!-- Basilika -->
+        <ellipse cx="90" cy="75" rx="8" ry="4" fill="#27AE60" transform="rotate(-30 90 75)"/>
+        <ellipse cx="120" cy="100" rx="9" ry="5" fill="#27AE60" transform="rotate(40 120 100)"/>
+        <ellipse cx="70" cy="105" rx="7" ry="4" fill="#27AE60" transform="rotate(15 70 105)"/>
+      </svg>
+    </div>
+
+    <p class="intro-status">Öppnar ugnen…</p>
+  </div>
+
+  <!-- ==========================================================
+       APPLE GLASS NAVIGATION
+       ========================================================== -->
+  <header>
+    <nav class="glass-nav">
+      <a href="#" class="brand">
+        <span class="brand-icon">🍕</span>
+        <span>EXEMPELPIZZERIA</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#om-oss" class="nav-link">Om oss</a>
+        <a href="#meny" class="nav-link">Meny</a>
+        <a href="#kontakt" class="nav-link">Kontakt</a>
+      </div>
+
+      <div class="nav-cta">
+        <div class="cart-pill">
+          <span>🛒</span>
+          <span id="cart-counter" class="cart-badge">0</span>
+          <span id="cart-total" style="font-size: 13px; font-weight: 700;">0 kr</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ==========================================================
+       HERO
+       ========================================================== -->
+  <section class="hero container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <span>🔥</span> 450° Vedugn • 48h fermenterad deg
+        </div>
+        <h1 class="hero-title">
+          Pizza med mer <br/>
+          <span class="accent">personlighet.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Mjuk och luftig i mitten, krispig i kanterna. Vi bakar äkta napolitansk pizza med italienskt hantverk och massor av kärlek.
+        </p>
+        <div class="btn-group">
+          <a href="#meny" class="btn-primary">
+            Utforska menyn <span>↓</span>
+          </a>
+          <a href="#kontakt" class="btn-glass">
+            Hitta till oss
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <div class="pizza-orbit">
+          <!-- Stor detaljerad pizza-grafik -->
+          <svg class="hero-pizza-img" viewBox="0 0 240 240">
+            <circle cx="120" cy="120" r="105" fill="#E67E22" stroke="#B9770E" stroke-width="8"/>
+            <circle cx="120" cy="120" r="92" fill="#F7DC6F" stroke="#E74C3C" stroke-width="5"/>
+            <!-- Mozzarella & toppings -->
+            <circle cx="85" cy="80" r="16" fill="#C0392B"/>
+            <circle cx="155" cy="75" r="15" fill="#C0392B"/>
+            <circle cx="115" cy="140" r="18" fill="#C0392B"/>
+            <circle cx="165" cy="145" r="15" fill="#C0392B"/>
+            <circle cx="75" cy="150" r="16" fill="#C0392B"/>
+            <ellipse cx="110" cy="95" rx="10" ry="6" fill="#2ECC71" transform="rotate(-25 110 95)"/>
+            <ellipse cx="145" cy="115" rx="11" ry="6" fill="#2ECC71" transform="rotate(35 145 115)"/>
+            <ellipse cx="85" cy="120" rx="9" ry="5" fill="#2ECC71" transform="rotate(10 85 120)"/>
+          </svg>
+
+          <!-- Flytande glas-bricka 1 -->
+          <div class="float-card top-left">
+            <div class="float-icon">⭐️</div>
+            <div class="float-text">
+              <strong>4.9 / 5.0</strong>
+              <span>Över 850 gäster</span>
+            </div>
+          </div>
+
+          <!-- Flytande glas-bricka 2 -->
+          <div class="float-card bottom-right">
+            <div class="float-icon">⏱️</div>
+            <div class="float-text">
+              <strong>Bakas på 90 sek</strong>
+              <span>I 450° het vedugn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       OM OSS & FEATURES
+       ========================================================== -->
+  <section id="om-oss" class="features-section container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-emoji">🌾</div>
+        <h3>48h Vilotid</h3>
+        <p>Vår deg får jäsa långsamt i två dygn. Det gör pizzabottnen otroligt lättsmält, fluffig och fylld med djup smak.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-emoji">🔥</div>
+        <h3>450° Vedugn</h3>
+        <p>Vi eldar uteslutande med svensk björkved för att nå den karaktäristiska napolitanska leopardfläckiga kanten.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-emoji">🍅</div>
+        <h3>San Marzano</h3>
+        <p>Tomater odlade i vulkanjorden vid Vesuvius och färsk fior di latte-mozzarella som levereras varje vecka.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       INTERAKTIV MENY
+       ========================================================== */
+  <section id="meny" class="menu-section container">
+    <div class="section-head">
+      <span class="section-tag">Vår Meny</span>
+      <h2 class="section-title">Hantverk i varje tugga</h2>
+      <p class="section-desc">Välj bland våra favoriter bakade på färskaste råvaror.</p>
+    </div>
+
+    <!-- Filterflikar -->
+    <div class="filter-tabs">
+      <button class="tab-btn active" onclick="filterMenu('alla', this)">Alla pizzor</button>
+      <button class="tab-btn" onclick="filterMenu('klassiker', this)">Klassiker</button>
+      <button class="tab-btn" onclick="filterMenu('special', this)">Specialare</button>
+      <button class="tab-btn" onclick="filterMenu('bianco', this)">Pizza Bianco</button>
+    </div>
+
+    <!-- Meny-grid -->
+    <div class="menu-grid" id="menu-container">
+      <!-- Margherita -->
+      <div class="menu-card" data-category="klassiker">
+        <div>
+          <span class="pizza-number">01</span>
+          <h3 class="pizza-name">Margherita D.O.P</h3>
+          <p class="pizza-ingredients">San Marzano-tomatsås, fior di latte, färsk basilika, extra jungfruolivolja och pecorino.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="pizza-price">145 kr</div>
+          <button class="add-to-cart-btn" onclick="addToCart('Margherita D.O.P', 145)">+ Lägg till</button>
+        </div>
+      </div>
+
+      <!-- Pepperoni Pop -->
+      <div class="menu-card" data-category="special">
+        <div class="menu-badge">Favorit</div>
+        <div>
+          <span class="pizza-number">02</span>
+          <h3 class="pizza-name">Pepperoni Pop</h3>
+          <p class="pizza-ingredients">Kryddig ventricina-salami, fior di latte, hot honey, rostad chili och färsk oregano.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="pizza-price">165 kr</div>
+          <button class="add-to-cart-btn" onclick="addToCart('Pepperoni Pop', 165)">+ Lägg till</button>
+        </div>
+      </div>
+
+      <!-- Tartufata Bianco -->
+      <div class="menu-card" data-category="bianco">
+        <div class="menu-badge">Gourmet</div>
+        <div>
+          <span class="pizza-number">03</span>
+          <h3 class="pizza-name">Tartufata Bianco</h3>
+          <p class="pizza-ingredients">Crème fraiche, tryffelkräm, fior di latte, skogschampinjoner, timjan och parmigiano reggiano.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="pizza-price">179 kr</div>
+          <button class="add-to-cart-btn" onclick="addToCart('Tartufata Bianco', 179)">+ Lägg till</button>
+        </div>
+      </div>
+
+      <!-- Parma & Burrata -->
+      <div class="menu-card" data-category="special">
+        <div>
+          <span class="pizza-number">04</span>
+          <h3 class="pizza-name">Parma & Burrata</h3>
+          <p class="pizza-ingredients">Tomatsås, fior di latte, 24-månaders parmaskinka, krämig hel burrata och ruccola.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="pizza-price">185 kr</div>
+          <button class="add-to-cart-btn" onclick="addToCart('Parma & Burrata', 185)">+ Lägg till</button>
+        </div>
+      </div>
+
+      <!-- Gröna Drömmen -->
+      <div class="menu-card" data-category="klassiker">
+        <div>
+          <span class="pizza-number">05</span>
+          <h3 class="pizza-name">Gröna Drömmen (Veg)</h3>
+          <p class="pizza-ingredients">Hemgjord basilika-pesto, körsbärstomater, grillad kronärtskocka, fior di latte och rostade pinjenötter.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="pizza-price">169 kr</div>
+          <button class="add-to-cart-btn" onclick="addToCart('Gröna Drömmen', 169)">+ Lägg till</button>
+        </div>
+      </div>
+
+      <!-- Quattro Formaggi -->
+      <div class="menu-card" data-category="bianco">
+        <div>
+          <span class="pizza-number">06</span>
+          <h3 class="pizza-name">Quattro Formaggi</h3>
+          <p class="pizza-ingredients">Fior di latte, krämig gorgonzola dolce, lagrad taleggio, parmesan och fikonmarmelad.</p>
+        </div>
+        <div class="menu-card-bottom">
+          <div class="pizza-price">175 kr</div>
+          <button class="add-to-cart-btn" onclick="addToCart('Quattro Formaggi', 175)">+ Lägg till</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       KONTAKT & SOCIALA MEDIER (MED DINA LÄNKAR)
+       ========================================================== -->
+  <section id="kontakt" class="contact-section container">
+    <div class="contact-container">
+      <div class="section-head" style="margin-bottom: 20px;">
+        <span class="section-tag">Kom förbi</span>
+        <h2 class="section-title">Pizza smakar bäst tillsammans</h2>
+        <p class="section-desc">Hitta hit, kolla öppettiderna eller följ oss för dagens specialare.</p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Vänster kolumn: Adress & Tider -->
+        <div>
+          <div class="contact-info-block">
+            <div class="contact-icon-box">📍</div>
+            <div>
+              <h4>Hitta hit</h4>
+              <p>Exempelgatan 12<br/>123 45 Exempelstaden</p>
+            </div>
+          </div>
+
+          <div class="contact-info-block">
+            <div class="contact-icon-box">🕒</div>
+            <div>
+              <h4>Öppettider</h4>
+              <p>
+                Mån – Tor: 16:00 – 22:00<br/>
+                Fre – Lör: 12:00 – 23:00<br/>
+                Sön: 12:00 – 21:00
+              </p>
+            </div>
+          </div>
+
+          <div class="contact-info-block">
+            <div class="contact-icon-box">📞</div>
+            <div>
+              <h4>Bordsbokning & Avhämtning</h4>
+              <p>Telefon: 08-123 45 67<br/>E-post: hej@exempelpizzeria.se</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Höger kolumn: Sociala medier med dina länkar -->
+        <div class="socials-card">
+          <div>
+            <h3>Följ oss</h3>
+            <p>Se hur vi bakar degen, få koll på helgens gästpizzor och häng med bakom kulisserna.</p>
+          </div>
+
+          <div class="social-btns">
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/leohog?stkn=MWh5bXdidjJ6bWZreQ%3D%3D&utm_source=qr" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="social-link-btn">
+              <span class="social-label">
+                <svg class="social-logo-svg" viewBox="0 0 24 24" fill="none" stroke="#E11D48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+                <span>Följ på Instagram</span>
+              </span>
+              <span>↗</span>
+            </a>
+
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/share/1DuGGvcSSP/?mibextid=wwXIfr" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="social-link-btn">
+              <span class="social-label">
+                <svg class="social-logo-svg" viewBox="0 0 24 24" fill="none" stroke="#1877F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                </svg>
+                <span>Gilla på Facebook</span>
+              </span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       FOOTER
+       ========================================================== -->
+  <footer>
+    <div class="container">
+      <div class="brand" style="justify-content: center; margin-bottom: 12px;">
+        <span class="brand-icon">🍕</span>
+        <span>EXEMPELPIZZERIA</span>
+      </div>
+      <p style="color: var(--text-muted); font-size: 14px;">Bakat med stolthet, passion och vedugnsvärme.</p>
+      <p class="footer-note">© 2026 EXEMPELPIZZERIA. Denna webbplats är ett demonstrationsprojekt skapad för att visa modern webbdesign och konvertering.</p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification vid varukorgsläggning -->
+  <div id="toast">
+    <span>🍕</span>
+    <span id="toast-message">Pizza tillagd!</span>
+  </div>
+
+  <!-- ==========================================================
+       JAVASCRIPT
+       ========================================================== -->
+  <script>
+    // 1. Automatisk avslutning av intron efter 4.6 sekunder
+    let introEnded = false;
+    function skipIntro() {
+      if (introEnded) return;
+      introEnded = true;
+      const screen = document.getElementById('intro-screen');
+      if (screen) {
+        screen.classList.add('hide');
+        setTimeout(() => screen.remove(), 900);
+      }
+    }
+    setTimeout(skipIntro, 4600);
+
+    // 2. Filterfunktion för menyn
+    function filterMenu(category, clickedBtn) {
+      // Uppdatera aktiva knappen
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      clickedBtn.classList.add('active');
+
+      // Filtrera korten
+      const cards = document.querySelectorAll('.menu-card');
+      cards.forEach(card => {
+        if (category === 'alla' || card.getAttribute('data-category') === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // 3. Varukorgshantering
+    let totalItems = 0;
+    let totalPrice = 0;
+
+    function addToCart(name, price) {
+      totalItems += 1;
+      totalPrice += price;
+
+      document.getElementById('cart-counter').textContent = totalItems;
+      document.getElementById('cart-total').textContent = totalPrice + ' kr';
+
+      // Visa toast
+      showToast(`Lade till ${name} i beställningen!`);
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = text;
+      toast.classList.add('show');
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
